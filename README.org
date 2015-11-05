@@ -1,0 +1,43 @@
+R package development on GitHub
+
+This 60 minute tutorial explains:
+- how to publish an R package on [[https://github.com][GitHub]].
+- the advantages and disadvantages of GitHub relative to CRAN-like
+  repositories.
+
+*** History, 10 minutes
+
+Historically, the main R package distribution method has been [[https://cran.r-project.org/][CRAN]]
+(and other similar repositories such as [[http://bioconductor.org/][BioConductor]]). The package
+submission process involves running =R CMD build=, uploading the
+resulting =pkg.tar.gz= file to ftp://cran.r-project.org/incoming/, and
+then emailing =CRAN@R-project.org= with the subject line =CRAN
+submission PACKAGE VERSION=. After that a human will read your email
+and decide whether or not your package meets [[https://cran.r-project.org/web/packages/policies.html][the CRAN Repository Policy]]. 
+If it does, then it will be added to CRAN so that anyone can download it 
+using the built-in =install.packages= function.
+
+R-Forge was initiated in [[https://r-forge.r-project.org/projects/siteadmin/][2006]] and officially announced at UseR 2008
+(see [[http://sugiyama-www.cs.titech.ac.jp/~toby/papers/2011-08-16-directlabels-and-regular-expressions-for-useR-2011/2011-useR-named-capture-regexp.pdf][my slides]] for a plot of the growth of R-Forge). TODO SVN etc
+
+Note on sources: from [[https://en.wikipedia.org/w/index.php?title%3DR_%2528programming_language%2529&oldid%3D689167000][Wikipedia:R_(programming_language)]]: Release 0.49
+on 1997-04-23 "is the oldest available source release, and compiles on
+a limited number of Unix-like platforms. CRAN is started on this date,
+with 3 mirrors that initially hosted 12 packages. Alpha versions of R
+for Microsoft Windows and Mac OS are made available shortly after this
+version."  However I was not able to find any primary source document
+validating this claim. The oldest history file I could find was [[https://cran.r-project.org/src/base/NEWS.0][NEWS.0]]
+([[file:R-1.6.0-ONEWS.txt][my copy]]), which mentions 0.50 as the oldest version. Question: who
+wrote the first version of =install.packages=, and when?
+
+*** Comparison table
+
+| Repository  | CRAN        | GitHub |
+|-------------+-------------+--------|
+| who tests   | them        | you    |
+| compilation | yes         | no     |
+| version     | most recent | any    |
+
+*** The future
+
+https://github.com/r-hub/proposal
