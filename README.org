@@ -70,6 +70,10 @@ R package version in the R script.
 
 *** Who decides how to test your code?
 
+In [[https://stat.ethz.ch/pipermail/r-announce/2000/000127.html][the R-1.0.0 announcement]] ([[file:R-1.html][my copy]]), Peter Dalgaard wrote that "the base
+language and the API for extension writers will remain stable for the
+foreseeable future."
+
 *** Comparison table
 
 | Repository  | CRAN        | GitHub |
