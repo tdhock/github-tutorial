@@ -1,4 +1,7 @@
-R package development on GitHub
+#+TITLE: R package development on GitHub
+
+# disable underscore subscripts
+#+OPTIONS: ^:nil
 
 This 60 minute tutorial explains:
 - how to publish an R package on [[https://github.com][GitHub]].
@@ -7,12 +10,23 @@ This 60 minute tutorial explains:
 
 *** History, 10 minutes
 
+| R version | date         | first            | who                   |
+|-----------+--------------+------------------+-----------------------|
+|           | 1992         | R                | Gentleman and Ihaka   |
+|           | 1993         | R on statlib     |                       |
+|      0.49 | 23 Apr 1997  | [[https://stat.ethz.ch/pipermail/r-announce/1997/000001.html][CRAN]] (src+bin)   | Tu Wien               |
+|    0.65.1 | 7 Oct 1999   | install.packages | Hornik and Leisch     |
+|           | 29 Aug 2006  | R-Forge          | Theussl et al.        |
+|           | 8 Feb 2008   | GitHub           | Preston-Werner et al. |
+|           | 22 June 2011 | devtools on CRAN | Wickham               |
+
 Historically, the main R package distribution method has been [[https://cran.r-project.org/][CRAN]]
 (and other similar repositories such as [[http://bioconductor.org/][BioConductor]]). The package
 submission process involves running =R CMD build=, uploading the
 resulting =pkg.tar.gz= file to ftp://cran.r-project.org/incoming/, and
 then emailing =CRAN@R-project.org= with the subject line =CRAN
-submission PACKAGE VERSION=. After that a human will read your email
+submission PACKAGE VERSION=. After that a human CRAN maintainer
+ will read your email
 and decide whether or not your package meets [[https://cran.r-project.org/web/packages/policies.html][the CRAN Repository Policy]]. 
 If it does, then it will be added to CRAN so that anyone can download it 
 using the built-in =install.packages= function.
@@ -20,15 +34,41 @@ using the built-in =install.packages= function.
 R-Forge was initiated in [[https://r-forge.r-project.org/projects/siteadmin/][2006]] and officially announced at UseR 2008
 (see [[http://sugiyama-www.cs.titech.ac.jp/~toby/papers/2011-08-16-directlabels-and-regular-expressions-for-useR-2011/2011-useR-named-capture-regexp.pdf][my slides]] for a plot of the growth of R-Forge). TODO SVN etc
 
-Note on sources: from [[https://en.wikipedia.org/w/index.php?title%3DR_%2528programming_language%2529&oldid%3D689167000][Wikipedia:R_(programming_language)]]: Release 0.49
-on 1997-04-23 "is the oldest available source release, and compiles on
-a limited number of Unix-like platforms. CRAN is started on this date,
-with 3 mirrors that initially hosted 12 packages. Alpha versions of R
-for Microsoft Windows and Mac OS are made available shortly after this
-version."  However I was not able to find any primary source document
-validating this claim. The oldest history file I could find was [[https://cran.r-project.org/src/base/NEWS.0][NEWS.0]]
-([[file:R-1.6.0-ONEWS.txt][my copy]]), which mentions 0.50 as the oldest version. Question: who
-wrote the first version of =install.packages=, and when?
+*** Problem: the versionless install.packages function
+
+=install.packages("pkg")= means "install the most recent version of
+=pkg= from a CRAN-like repository." This works fine, as long as all of
+the most recent versions of CRAN packages work with each
+other. 
+
+However, in practice this causes problems when a package developer
+wants to change his package, and there are other CRAN packages which
+depend on it. For example, the ggplot2 package introduced some
+backwards-incompatible changes in 2015, so many of the packages which
+depend on ggplot2 had to be updated in response (or removed from
+CRAN).
+
+It also makes it [[http://sugiyama-www.cs.titech.ac.jp/~toby/org/HOCKING-reproducible-research-with-R.html][difficult to perform reproducible research using R]]. 
+For example, I used R to write my PhD in 2012, and now in 2015 most of
+the versions of the R packages that I used have changed. 
+If I download my PhD thesis code and try to re-run the code to 
+re-make the results figures, I will get errors unless I have the
+specific R package versions that I used in 2012. But the standard
+practice for documenting package dependencies in R scripts is
+simply writing =library(pkg)=,
+which does not document what version of =pkg= was used.
+So it is effectively impossible to re-do the computations.
+
+I proposed the [[https://github.com/tdhock/requireGitHub][requireGitHub]] package to avoid this problem (and that
+page also discussions some alternative solutions proposed by
+others). Since =devtools::install_github= can install any version 
+(not just the most recent version), it is possible to write 
+future-proof, reproducible scripts by simply writing the 
+R package version in the R script.
+
+*** Problem: distributing packages with compiled code
+
+*** Who decides how to test your code?
 
 *** Comparison table
 
@@ -38,6 +78,75 @@ wrote the first version of =install.packages=, and when?
 | compilation | yes         | no     |
 | version     | most recent | any    |
 
+
 *** The future
 
 https://github.com/r-hub/proposal
+
+
+*** Historical references
+
+R history [[https://homepage.boku.ac.at/leisch/papers/Hornik%2BLeisch-2002.pdf][from an Austrian perspective]].
+
+From [[https://en.wikipedia.org/w/index.php?title%3DR_%2528programming_language%2529&oldid%3D689167000][Wikipedia:R_(programming_language)]]: Release 0.49 on 23 Apr 1997
+"is the oldest available source release, and compiles on a limited
+number of Unix-like platforms. CRAN is started on this date, with 3
+mirrors that initially hosted 12 packages. Alpha versions of R for
+Microsoft Windows and Mac OS are made available shortly after this
+version." It did yet not have the concept of "packages" but it had the
+following concept of library, excerpt from
+[[file:R-0.49-man-library.txt][R-0.49/src/library/base/man/library]]:
+
+#+BEGIN_SRC text
+A library consists of a subdirectory containing a LANG(TITLe)
+and LANG(INDEX) file, and subdirectories LANG(funs), LANG(man), LANG(src)
+and LANG(src-c).  The LANG(TiTLE) file contains a line giving the name
+of the library and a brief description. LANG(INDEX) contains a line
+for each sufficiently interesting function in the library,
+giving its name and a description (functions such as print methods
+not usually called explicitly might not be included). 
+PARA
+The LANG(funs) subdirectory contains R code files with names beginning
+with lowercase letters. One of these files should use LANG(library.dynam())
+to load any necessary compiled code. 
+PARA
+Source and a Makefile for the compiled code is in LANG(src), and a pure
+LANG(C) version of the source should be in LANG(src-c). In the common
+case when all the source is in LANG(C) it may be convenient to make one
+of these directories a symbolic link to the other. The Makefile will be
+passed various machine-dependent compile and link flags, examples of
+which can be seen in the LANG(eda) library.
+PARA
+The LANG(man) subdirectory should contain R help files for the
+functions in the library.
+PARA
+To install a library run LANG(make libs) in LANG(RHOME/src/library) and
+then run LANG(etc/lib-installhelp) in LANG(RHOME). This will reinstall
+all the libraries.
+#+END_SRC
+
+The CRAN was [[https://stat.ethz.ch/pipermail/r-announce/1997/000001.html][announced]] by Kurt Hornik on 23 Apr 1997 ([[file:ANNOUNCE-CRAN.html][my copy]]). He
+wrote that "prebuilt R binaries (the base distribution and
+extensions)" were available. He also established the submission
+process which remains largely intact to this day:
+#+BEGIN_SRC text
+In the short run, the process of `submitting' to CRAN is very simple:
+upload to 
+
+	ftp://ftp.ci.tuwien.ac.at/incoming
+
+and drop me a note (Kurt.Hornik at ci.tuwien.ac.at).
+#+END_SRC
+
+The first public versions of =install.packages= and =update.packages=
+appeared in =R-0.65.1/src/library/base/R/system.unix.R= (1999).
+[[https://cran.r-project.org/src/base/NEWS.0][NEWS.0]] ([[file:R-1.6.0-ONEWS.txt][my copy]]) announces the first =update.packages=:
+
+#+BEGIN_SRC text
+		CHANGES IN R VERSION 0.65.1
+...
+    o	R INSTALL now can directly install pkg_version.tar.gz files
+	as obtained from CRAN. New function update.packages()
+	& friends for automatically downloading packages from CRAN and
+	install them on the fly (on Unix and Windows).
+#+END_SRC

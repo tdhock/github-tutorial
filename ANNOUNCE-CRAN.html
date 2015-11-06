@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+ <HEAD>
+   <TITLE> ANNOUNCE:  CRAN
+   </TITLE>
+   <LINK REL="Index" HREF="index.html" >
+   <LINK REL="made" HREF="mailto:r-announce%40stat.math.ethz.ch?Subject=Re%3A%20ANNOUNCE%3A%20%20CRAN&In-Reply-To=%3C199704230640.IAA03837%40aragorn.ci.tuwien.ac.at%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000000.html">
+   <LINK REL="Next"  HREF="000002.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>ANNOUNCE:  CRAN</H1>
+    <B>Kurt Hornik</B> 
+    <A HREF="mailto:r-announce%40stat.math.ethz.ch?Subject=Re%3A%20ANNOUNCE%3A%20%20CRAN&In-Reply-To=%3C199704230640.IAA03837%40aragorn.ci.tuwien.ac.at%3E"
+       TITLE="ANNOUNCE:  CRAN">Kurt.Hornik at ci.tuwien.ac.at
+       </A><BR>
+    <I>Wed Apr 23 08:40:28 CEST 1997</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000000.html">&quot;R-announce&quot;, &quot;R-help&quot;, &quot;R-devel&quot; : 3 mailing lists for R
+</A></li>
+        <LI>Next message: <A HREF="000002.html">Version 0.49 Released
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#1">[ date ]</a>
+              <a href="thread.html#1">[ thread ]</a>
+              <a href="subject.html#1">[ subject ]</a>
+              <a href="author.html#1">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>This is the first announcement of the
+
+		   Comprehensive R Archive Network 
+			        (CRAN)
+
+CRAN is a collection of sites which carry identical material, consisting
+of the R&amp;R R distribution(s), the contributed extensions, documentation
+for R, and binaries.
+
+The CRAN master site can be found at the URL
+
+	<A HREF="ftp://ftp.ci.tuwien.ac.at/pub/R">ftp://ftp.ci.tuwien.ac.at/pub/R</A>		(Austria)
+
+and is currently being mirrored daily at
+
+	<A HREF="http://lib.stat.cmu.edu/R/CRAN">http://lib.stat.cmu.edu/R/CRAN</A>		(U.S.A.)
+	<A HREF="ftp://franz.stat.wisc.edu/pub/R">ftp://franz.stat.wisc.edu/pub/R</A>		(U.S.A.)
+	<A HREF="ftp://ftp.stat.math.ethz.ch/R-CRAN">ftp://ftp.stat.math.ethz.ch/R-CRAN</A>	(Switzerland)
+
+This list should grow within soon.  If you want to become an official
+CRAN mirror, please send me a note (<A HREF="https://stat.ethz.ch/mailman/listinfo/r-announce">Kurt.Hornik at ci.tuwien.ac.at</A>).
+
+Please use the CRAN site closest to you to reduce network load.
+
+The structure of the CRAN tree is as follows.
+
+	src/base		# Source distribution
+	src/contrib		# Source for extensions
+	doc/			# Documentation
+	bin/&lt;platform&gt;		# Binaries
+
+`src/base' contains the official R source distribution as provided by
+Ross Ihaka and Robert Gentleman.
+
+`src/contrib' contains code for extension packages.  Currently, there
+are acepack, bootstrap, ctest, date, e1071, fracdiff, gee, jpn, oz,
+snns, splines, and survival4.  Look at the INDEX file in this directory
+for more specific information.  More packages are expected for the near
+future.
+
+`bin' is for prebuilt R binaries (the base distribution and extensions),
+grouped according to platforms.  Currently, there are only experimental
+packages for Debian GNU/Linux.  I hope that `.tar.gz' files with
+contents relative to an installation tree (e.g. `bin/', `lib/R/', and
+`man/man1/R.1') can be made available soon for all major supported Unix
+platforms.
+
+`doc' is for additional documentation and information on R.
+
+In the short run, the process of `submitting' to CRAN is very simple:
+upload to 
+
+	<A HREF="ftp://ftp.ci.tuwien.ac.at/incoming">ftp://ftp.ci.tuwien.ac.at/incoming</A>
+
+and drop me a note (<A HREF="https://stat.ethz.ch/mailman/listinfo/r-announce">Kurt.Hornik at ci.tuwien.ac.at</A>).  Please indicate the
+copyright situation (GPL, ...) in your submission.
+
+In the long run, there will be a form to fill in, and some requirement
+of authentication (PGPish, ...), and submission could maybe be done via
+WWW.  I am open to suggestions here.
+
+*****************************************************************************
+*          Kurt Hornik         *                                            *
+*  Dept of Statistics TU Wien  * tel:    +43 (1) 58801-4542                 *
+*  Wiedner Hauptstr 8-10/1071  * fax:    +43 (1) 504-1498                   *
+*          A-1040 Wien         * email:  <A HREF="https://stat.ethz.ch/mailman/listinfo/r-announce">Kurt.Hornik at ci.tuwien.ac.at</A>        *
+*            Austria           * WWW:    <A HREF="http://www.ci.tuwien.ac.at/~hornik">http://www.ci.tuwien.ac.at/~hornik</A> *
+*****************************************************************************
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+r-announce mailing list -- Read <A HREF="http://www.ci.tuwien.ac.at/~hornik/R/R-FAQ.html">http://www.ci.tuwien.ac.at/~hornik/R/R-FAQ.html</A>
+Send &quot;info&quot;, &quot;help&quot;, or &quot;[un]subscribe&quot;
+(in the &quot;body&quot;, not the subject !)  To: <A HREF="https://stat.ethz.ch/mailman/listinfo/r-announce">r-announce-request at stat.math.ethz.ch</A>
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000000.html">&quot;R-announce&quot;, &quot;R-help&quot;, &quot;R-devel&quot; : 3 mailing lists for R
+</A></li>
+	<LI>Next message: <A HREF="000002.html">Version 0.49 Released
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#1">[ date ]</a>
+              <a href="thread.html#1">[ thread ]</a>
+              <a href="subject.html#1">[ subject ]</a>
+              <a href="author.html#1">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://stat.ethz.ch/mailman/listinfo/r-announce">More information about the R-announce
+mailing list</a><br>
+</body></html>
