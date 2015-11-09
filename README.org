@@ -32,32 +32,44 @@ If it does, then it will be added to CRAN so that anyone can download it
 using the built-in =install.packages= function.
 
 R-Forge was initiated in [[https://r-forge.r-project.org/projects/siteadmin/][2006]] and officially announced at UseR 2008
-(see [[http://sugiyama-www.cs.titech.ac.jp/~toby/papers/2011-08-16-directlabels-and-regular-expressions-for-useR-2011/2011-useR-named-capture-regexp.pdf][my slides]] for a plot of the growth of R-Forge). TODO SVN etc
+(see [[http://sugiyama-www.cs.titech.ac.jp/~toby/papers/2011-08-16-directlabels-and-regular-expressions-for-useR-2011/2011-useR-named-capture-regexp.pdf][my useR 2011 lightning talk slides]] for a plot of the growth of
+R-Forge). R-Forge aims to popularize the development model that R-core
+uses to develop the base R system ([[http://sugiyama-www.cs.titech.ac.jp/~toby/papers/2011-06-09-R-package-development-presentations-for-IBL/2011-06-09-HOCKING-R-Forge.pdf][for details see my slides from a
+2011 presentation at IBL]]). 
 
+| service | web                              | email list                           | bug/issue tracker                                  | version control                             |
+|---------+----------------------------------+--------------------------------------+----------------------------------------------------+---------------------------------------------|
+| R-core  | http://www.r-project.org         | r-help@r-project.org                 | https://bugs.r-project.org                         | http://svn.r-project.org                    |
+| R-Forge | http://pkg.r-forge.r-project.org | pkg-help@lists.r-forge.r-project.org | http://r-forge.r-project.org/tracker/?group_id=496 | svn://svn.r-forge.r-project.org/svnroot/pkg |
+| GitHub  | http://user.github.io/pkg        | NA                                   | https://github.com/user/pkg/issues                 | git@github.com:user/pkg.git                 |
+  
 *** Problem: the versionless install.packages function
 
 =install.packages("pkg")= means "install the most recent version of
 =pkg= from a CRAN-like repository." This works fine, as long as all of
-the most recent versions of CRAN packages work with each
-other. 
+the most recent versions of CRAN packages work with each other (which
+is one of the goals of the CRAN system, as stated in [[http://dx.doi.org/10.1007/s00180-010-0205-5][Prospects and
+Challenges in R Package Development]] by Theussl, Ligges, and Hornik).
 
 However, in practice this causes problems when a package developer
 wants to change his package, and there are other CRAN packages which
 depend on it. For example, the ggplot2 package introduced some
 backwards-incompatible changes in 2015, so many of the packages which
-depend on ggplot2 had to be updated in response (or removed from
-CRAN).
+depend on ggplot2 had to be updated in response. What if the
+developers of these other packages can not update them immediately?
+Then their packages are removed from CRAN.
 
-It also makes it [[http://sugiyama-www.cs.titech.ac.jp/~toby/org/HOCKING-reproducible-research-with-R.html][difficult to perform reproducible research using R]]. 
+It also makes it [[http://sugiyama-www.cs.titech.ac.jp/~toby/org/HOCKING-reproducible-research-with-R.html][difficult to perform reproducible research using R]].
 For example, I used R to write my PhD in 2012, and now in 2015 most of
-the versions of the R packages that I used have changed. 
-If I download my PhD thesis code and try to re-run the code to 
-re-make the results figures, I will get errors unless I have the
-specific R package versions that I used in 2012. But the standard
-practice for documenting package dependencies in R scripts is
-simply writing =library(pkg)=,
-which does not document what version of =pkg= was used.
-So it is effectively impossible to re-do the computations.
+the versions of the R packages that I used have changed.  If I
+download my PhD thesis code and try to re-run the code to re-make the
+results figures, I will almost certainly get errors unless I install
+the specific R package versions that I used in 2012 (which I saved
+along with my thesis, just in case). But the standard practice for
+documenting package dependencies in R scripts is simply writing
+=library(pkg)=, which does not document what version of =pkg= was
+used. So for most research it is effectively impossible to have truly
+reproducible computations.
 
 I proposed the [[https://github.com/tdhock/requireGitHub][requireGitHub]] package to avoid this problem (and that
 page also discussions some alternative solutions proposed by
