@@ -88,12 +88,10 @@ foreseeable future."
 
 *** Comparison table
 
-| Repository  | CRAN        | GitHub |
-|-------------+-------------+--------|
-| who tests   | them        | you    |
-| compilation | yes         | no     |
-| version     | most recent | any    |
-
+| Repository | Who tests | Compilation | Version     |
+|------------+-----------+-------------+-------------|
+| CRAN       | them      | yes         | most recent |
+| GitHub     | you       | no          | any         |
 
 *** The future
 
