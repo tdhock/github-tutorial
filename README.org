@@ -8,7 +8,7 @@ This 60 minute tutorial explains:
 - the advantages and disadvantages of GitHub relative to CRAN-like
   repositories.
 
-*** History, 10 minutes
+** History, 10 minutes
 
 | R version | date         | first            | who                   |
 |-----------+--------------+------------------+-----------------------|
@@ -28,20 +28,30 @@ then emailing =CRAN@R-project.org= with the subject line =CRAN
 submission PACKAGE VERSION=. After that a human CRAN maintainer
  will read your email
 and decide whether or not your package meets [[https://cran.r-project.org/web/packages/policies.html][the CRAN Repository Policy]]. 
-If it does, then it will be added to CRAN so that anyone can download it 
+If he decides that your package is good enough,
+then it will be added to CRAN so that anyone can download it 
 using the built-in =install.packages= function.
 
-R-Forge was initiated in [[https://r-forge.r-project.org/projects/siteadmin/][2006]] and officially announced at UseR 2008
-(see [[http://sugiyama-www.cs.titech.ac.jp/~toby/papers/2011-08-16-directlabels-and-regular-expressions-for-useR-2011/2011-useR-named-capture-regexp.pdf][my useR 2011 lightning talk slides]] for a plot of the growth of
-R-Forge). R-Forge aims to popularize the development model that R-core
-uses to develop the base R system ([[http://sugiyama-www.cs.titech.ac.jp/~toby/papers/2011-06-09-R-package-development-presentations-for-IBL/2011-06-09-HOCKING-R-Forge.pdf][for details see my slides from a
-2011 presentation at IBL]]). 
+R-Forge was initiated in [[https://r-forge.r-project.org/projects/siteadmin/][2006]] and officially announced at
+UseR 2008. R-Forge aims to popularize the development model that
+R-core uses to develop the base R system ([[http://sugiyama-www.cs.titech.ac.jp/~toby/papers/2011-06-09-R-package-development-presentations-for-IBL/2011-06-09-HOCKING-R-Forge.pdf][for details see my slides
+from a 2011 presentation at IBL]]). The number of packages on R-Forge
+continues to increase every year, but more slowly since the first
+version of devtools was published on CRAN in 2011.
 
-| service | web                              | email list                           | bug/issue tracker                                  | version control                             |
-|---------+----------------------------------+--------------------------------------+----------------------------------------------------+---------------------------------------------|
-| R-core  | http://www.r-project.org         | r-help@r-project.org                 | https://bugs.r-project.org                         | http://svn.r-project.org                    |
-| R-Forge | http://pkg.r-forge.r-project.org | pkg-help@lists.r-forge.r-project.org | http://r-forge.r-project.org/tracker/?group_id=496 | svn://svn.r-forge.r-project.org/svnroot/pkg |
-| GitHub  | http://user.github.io/pkg        | NA                                   | https://github.com/user/pkg/issues                 | git@github.com:user/pkg.git                 |
+[[file:figure-R-Forge-projects-cumulative.png]]
+
+[[file:figure-R-Forge-registrations-per-month.png]]
+
+TODO explain about devtools and GitHub.
+
+** Differences between CRAN, R-Forge, and GitHub
+
+| service | compilation | web             | email list | bug tracker | version control | tests | install        |
+|---------+-------------+-----------------+------------+-------------+-----------------+-------+----------------|
+| CRAN    | yes         | vignettes       | no         | no          | manual          | them  | latest version |
+| R-Forge | yes         | arbitrary pages | yes        | yes         | svn             | them  | latest version |
+| GitHub  | no          | arbitrary pages | no         | yes         | git             | you   | any version    |
   
 *** Problem: the versionless install.packages function
 
@@ -86,19 +96,13 @@ In [[https://stat.ethz.ch/pipermail/r-announce/2000/000127.html][the R-1.0.0 ann
 language and the API for extension writers will remain stable for the
 foreseeable future."
 
-*** Comparison table
 
-| Repository | Who tests | Compilation | Version     |
-|------------+-----------+-------------+-------------|
-| CRAN       | them      | yes         | most recent |
-| GitHub     | you       | no          | any         |
-
-*** The future
+** The future
 
 https://github.com/r-hub/proposal
 
 
-*** Historical references
+** Historical references
 
 R history [[https://homepage.boku.ac.at/leisch/papers/Hornik%2BLeisch-2002.pdf][from an Austrian perspective]].
 
