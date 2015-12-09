@@ -4,9 +4,50 @@
 #+OPTIONS: ^:nil
 
 This 60 minute tutorial explains:
+- when (NOT) to publish an R package.
 - how to publish an R package on [[https://github.com][GitHub]].
 - the advantages and disadvantages of GitHub relative to CRAN-like
   repositories.
+
+** When NOT to publish an R package?
+
+Below I describe some situations in which an R package may be useful,
+but there are some simpler solutions.
+
+You want to...
+- distribute some R functions. In an R package you would put the
+  functions in =R/*.R= files. But if you can put the functions into a
+  single R script, you can avoid having to write a package, and simply
+  use the =source= function. For example Bioconductor distributes its
+  installation functions via
+  =source("http://bioconductor.org/biocLite.R")=.
+- distribute data sets. In an R package you would use compressed
+  =data/*.RData= files. But simple data sets can be distributed as R
+  code (perhaps created using =dput=). For example simple data sets
+  defined in R code are often used on [[http://stackoverflow.com/questions/17839153/moving-directlabels-slightly-to-left][stackoverflow]].
+- make sure your R functions pass some tests. In an R package you
+  would put the tests in =tests/*.R= files. But you could also just
+  define tests after your functions (perhaps using =stop= or
+  =stopifnot=).
+
+** When to publish an R package?
+
+In the situations below, writing an R package is the best solution.
+
+You want to...
+- distribute some C/C++ functions. In that case you should write an R
+  package with =src/*= files (see my [[https://github.com/tdhock/when-c][when-c]] tutorial for more info).
+- read documentation for your functions using =help=. In this case you
+  must write an R package with =man/*.Rd= files. For example, the
+  functions in my [[https://github.com/tdhock/namedCapture][namedCapture]] package are all defined in one R
+  script, which can be loaded using
+  =source("https://raw.githubusercontent.com/tdhock/namedCapture/master/R/str_match.R")=. But
+  I wanted to document these functions, so I created the namedCapture
+  package which has [[https://github.com/tdhock/namedCapture/tree/master/man][man/*.Rd]] files.
+- automatically resolve installation dependencies (your code uses some
+  packages, and those packages use other packages). The
+  =install.packages("pkg")= function means "install =pkg=, and all
+  packages required to use it."
 
 ** History, 10 minutes
 
