@@ -86,13 +86,38 @@ version of devtools was published on CRAN in 2011.
 
 TODO explain about devtools and GitHub.
 
-** Differences between CRAN, R-Forge, and GitHub
+** Differences between CRAN, Bioconductor, R-Forge, and GitHub
 
-| service | compilation | web             | email list | bug tracker | version control | tests | install        |
-|---------+-------------+-----------------+------------+-------------+-----------------+-------+----------------|
-| CRAN    | yes         | vignettes       | no         | no          | manual          | them  | latest version |
-| R-Forge | yes         | arbitrary pages | yes        | yes         | svn             | them  | latest version |
-| GitHub  | no          | arbitrary pages | no         | yes         | git             | you   | any version    |
+Publishing a package on CRAN takes much more time than R-Forge or
+GitHub. To publish a package on CRAN, you need to:
+- Install R-devel: [[https://cran.r-project.org/bin/windows/base/rdevel.html][Windows]] [[https://cran.r-project.org/bin/windows/base/R-devel-win.exe][R-devel-win.exe]], [[http://r.research.att.com/][Mac]] [[http://r.research.att.com/mavericks/R-devel/R-devel-mavericks-signed.pkg][R-devel.pkg]], [[http://cran.utstat.utoronto.ca/bin/linux/][linux]],
+  [[https://stat.ethz.ch/R/daily/][source]] [[https://stat.ethz.ch/R/daily/R-devel.tar.gz][R-devel.tar.gz]] (my [[https://github.com/tdhock/dotfiles/blob/master/install-r-devel.sh][install-r-devel.sh]]), [[https://hub.docker.com/r/rocker/r-devel/][docker]]. This step is
+  essential since CRAN maintainers may have introduced new package
+  checks in the most recent version of R.
+- Using R-devel, run =R CMD build pkg= and then =R CMD check --as-cran
+  pkg_version.tar.gz=. Fix any problems and check again until there
+  are no more problems. I don't recommend using [[http://r-pkgs.had.co.nz/check.html][devtools::check]] since
+  that is not what the CRAN maintainers use.
+- Read the [[https://cran.r-project.org/web/packages/policies.html][CRAN Repository Policy]]. Even if you have read this before,
+  read it again as it frequently [[https://github.com/eddelbuettel/crp/commits/master/texi][changes]]!
+- Submit your package via FTP+email, [[https://cran.r-project.org/submit.html][the new web form]], or
+  [[http://r-pkgs.had.co.nz/release.html][devtools::release]].
+
+The various R package repositories provide different features to R
+package developers:
+
+| service | compilation | web             | support | versioning | tests | install        |
+|---------+-------------+-----------------+---------+------------+-------+----------------|
+| [[http://cran.r-project.org/][CRAN]]    | yes         | vignettes       | [[https://www.r-project.org/mail.html][email]]   | manual     | them  | latest version |
+| [[http://www.bioconductor.org/][BioC]]    | yes         | vignettes       | [[https://support.bioconductor.org/][forum]]   | svn        | them  | latest version |
+| [[http://r-forge.r-project.org/][R-Forge]] | yes         | arbitrary pages | lots    | svn        | them  | latest version |
+| [[https://github.com/][GitHub]]  | no          | arbitrary pages | issues  | git        | you   | any version    |
+
+Bioconductor is similar to CRAN in terms of features, but requires a
+little more effort for a submission. Its [[http://www.bioconductor.org/developers/package-submission/][policies]] explain that you
+have to run =R CMD BiocCheck= and create at least one evaluated
+vignette. Also you need to "Be committed to maintaining your package
+across multiple release cycles."
   
 *** Problem: the versionless install.packages function
 
@@ -131,12 +156,25 @@ R package version in the R script.
 
 *** Problem: distributing packages with compiled code
 
+One drawback to using GitHub to distribute a package with compiled
+code is that devtools::install_github will only work on a system that
+has a compiler. So for example it may be difficult for people with
+Windows or Mac systems to install your package from GitHub. In
+contrast CRAN compiles Windows and Mac binaries on their servers, and
+=install.packages(type="binary")= will download and install those
+binaries.
+
 *** Who decides how to test your code?
 
 In [[https://stat.ethz.ch/pipermail/r-announce/2000/000127.html][the R-1.0.0 announcement]] ([[file:R-1.html][my copy]]), Peter Dalgaard wrote that "the base
 language and the API for extension writers will remain stable for the
 foreseeable future."
 
+Write your own tests on [[https://docs.travis-ci.com/user/languages/r][travis]].
+
+*** How to depend on other packages?
+
+New repos argument in DESCRIPTION, used by devtools::install_github
 
 ** The future
 
