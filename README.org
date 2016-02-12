@@ -84,7 +84,9 @@ version of devtools was published on CRAN in 2011.
 
 [[file:figure-R-Forge-registrations-per-month.png]]
 
-TODO explain about devtools and GitHub.
+The first version of the devtools package appeared on CRAN on 22
+June 2011. Its =install_github= function makes it easy to install an R
+package hosted on GitHub.
 
 ** Differences between CRAN, Bioconductor, R-Forge, and GitHub
 
@@ -106,12 +108,12 @@ GitHub. To publish a package on CRAN, you need to:
 The various R package repositories provide different features to R
 package developers:
 
-| service | compilation | web             | support | versioning | tests | install        |
-|---------+-------------+-----------------+---------+------------+-------+----------------|
-| [[http://cran.r-project.org/][CRAN]]    | yes         | vignettes       | [[https://www.r-project.org/mail.html][email]]   | manual     | them  | latest version |
-| [[http://www.bioconductor.org/][BioC]]    | yes         | vignettes       | [[https://support.bioconductor.org/][forum]]   | svn        | them  | latest version |
-| [[http://r-forge.r-project.org/][R-Forge]] | yes         | arbitrary pages | lots    | svn        | them  | latest version |
-| [[https://github.com/][GitHub]]  | no          | arbitrary pages | issues  | git        | you   | any version    |
+| service | compilation | web       | support | versioning | tests | install        |
+|---------+-------------+-----------+---------+------------+-------+----------------|
+| [[http://cran.r-project.org/][CRAN]]    | yes         | vignettes | [[https://www.r-project.org/mail.html][email]]   | manual     | them  | latest version |
+| [[http://www.bioconductor.org/][BioC]]    | yes         | vignettes | [[https://support.bioconductor.org/][forum]]   | svn        | them  | latest version |
+| [[http://r-forge.r-project.org/][R-Forge]] | yes         | any pages | lots    | svn        | them  | latest version |
+| [[https://github.com/][GitHub]]  | no          | any pages | issues  | git        | you   | any version    |
 
 Bioconductor is similar to CRAN in terms of features, but requires a
 little more effort for a submission. Its [[http://www.bioconductor.org/developers/package-submission/][policies]] explain that you
@@ -161,20 +163,67 @@ code is that devtools::install_github will only work on a system that
 has a compiler. So for example it may be difficult for people with
 Windows or Mac systems to install your package from GitHub. In
 contrast CRAN compiles Windows and Mac binaries on their servers, and
-=install.packages(type="binary")= will download and install those
+install.packages(type="binary") will download and install those
 binaries.
 
 *** Who decides how to test your code?
 
-In [[https://stat.ethz.ch/pipermail/r-announce/2000/000127.html][the R-1.0.0 announcement]] ([[file:R-1.html][my copy]]), Peter Dalgaard wrote that "the base
-language and the API for extension writers will remain stable for the
-foreseeable future."
+In [[https://stat.ethz.ch/pipermail/r-announce/2000/000127.html][the R-1.0.0 announcement]] ([[file:R-1.html][my copy]]), Peter Dalgaard wrote that "the
+base language and the API for extension writers will remain stable for
+the foreseeable future." However CRAN does make [[https://github.com/eddelbuettel/crp/commits/master/texi][changes]] to its
+[[https://cran.r-project.org/web/packages/policies.html][policies]], which are currently enforced by running =R CMD check
+--as-cran= on [[https://cran.r-project.org/web/checks/check_results_directlabels.html][several different operating systems that R supports]].
 
-Write your own tests on [[https://docs.travis-ci.com/user/languages/r][travis]].
+[[https://travis-ci.org/][Travis-CI]] is a continuous integration service which gives 50 minutes
+of free computation time to free/open-source software projects hosted
+on GitHub. For R packages that you would like to eventually submit to
+CRAN, you should use the [[https://docs.travis-ci.com/user/languages/r][instructions for the R language]] to run =R CMD
+check= on Travis after every push to your GitHub repos.
+
+If you don't want to run all of the =R CMD check= tests, you can write
+your own testing script using [[https://github.com/craigcitro/r-travis/wiki][craigcitro's travis-tool.sh]] ([[https://github.com/tdhock/animint/blob/master/.travis.yml][example]]).
+
+*** Code coverage
+
+[[https://en.wikipedia.org/wiki/Code_coverage][Code coverage]] is a percent that indicates how much of the code in your
+=pkg/R/*.R= files is executed when you run the code in =tests/*.R=. It
+can be computed a by adding a call to the [[https://github.com/jimhester/covr][covr]] package at the end of
+your Travis build ([[https://github.com/tdhock/namedCapture/blob/master/.travis.yml][example]]). You can see which lines of code were
+executed by looking at [[https://coveralls.io/github/tdhock/animint][the coveralls.io page]]. For example [[https://coveralls.io/builds/5023162/source?filename=R%252Fknitr.R][the details
+page for animint/R/knitr.R]] shows that the code for rendering an
+animint inside of shiny is not run during tests on Travis.
+
+Code coverage can be useful for
+- identifying bugs in your code. You may be able to fix problems by
+  writing tests for your code that is not covered.
+- getting people to contribute to your free/open-source project. It is
+  often much easier to write a test than it is to write code that
+  implements a new feature. 
+
+Code coverage is not computed on CRAN/R-Forge/BioConductor.
 
 *** How to depend on other packages?
 
-New repos argument in DESCRIPTION, used by devtools::install_github
+List them in the DESCRIPTION file ([[https://github.com/tdhock/animint/blob/master/DESCRIPTION][example]]). [[https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Package-Dependencies][Full documentation in
+"Package dependencies" section of Writing R extensions]].
+
+You can use Depends or Imports for the packages that your package
+will definitely need. *Depends* packages will be attached prior to your
+package (as if the library function was used). *Imports* packages will
+not be attached (so the user will not have access to functions in that
+other package). 
+
+Use *Suggests* for packages that you use in examples or tests (but are
+not necessary for running your functions).
+
+The *Remotes* argument is defined by devtools (not CRAN). If it is
+present, it is used by devtools::install_github to get packages from
+GitHub (instead of installing them from CRAN). [[https://cran.r-project.org/web/packages/devtools/vignettes/dependencies.html][Details in
+vignette("dependencies", package="devtools")]].
+
+** Exercise: create a simple package
+
+TODO
 
 ** The future
 
