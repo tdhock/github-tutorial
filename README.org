@@ -101,7 +101,10 @@ GitHub. To publish a package on CRAN, you need to:
   are no more problems. I don't recommend using [[http://r-pkgs.had.co.nz/check.html][devtools::check]] since
   that is not what the CRAN maintainers use.
 - Read the [[https://cran.r-project.org/web/packages/policies.html][CRAN Repository Policy]]. Even if you have read this before,
-  read it again as it frequently [[https://github.com/eddelbuettel/crp/commits/master/texi][changes]]!
+  read it again as it frequently [[https://github.com/eddelbuettel/crp/commits/master/texi][changes]]! Kind of funny since in [[https://stat.ethz.ch/pipermail/r-announce/2000/000127.html][the
+  R-1.0.0 announcement]] ([[file:R-1.html][my copy]]), Peter Dalgaard wrote that "the base
+  language and the API for extension writers will remain stable for
+  the foreseeable future."
 - Submit your package via FTP+email, [[https://cran.r-project.org/submit.html][the new web form]], or
   [[http://r-pkgs.had.co.nz/release.html][devtools::release]].
 
@@ -120,43 +123,10 @@ little more effort for a submission. Its [[http://www.bioconductor.org/developer
 have to run =R CMD BiocCheck= and create at least one evaluated
 vignette. Also you need to "Be committed to maintaining your package
 across multiple release cycles."
-  
-*** Problem: the versionless install.packages function
 
-=install.packages("pkg")= means "install the most recent version of
-=pkg= from a CRAN-like repository." This works fine, as long as all of
-the most recent versions of CRAN packages work with each other (which
-is one of the goals of the CRAN system, as stated in [[http://dx.doi.org/10.1007/s00180-010-0205-5][Prospects and
-Challenges in R Package Development]] by Theussl, Ligges, and Hornik).
+** Things you can do on CRAN but not on GitHub
 
-However, in practice this causes problems when a package developer
-wants to change his package, and there are other CRAN packages which
-depend on it. For example, the ggplot2 package introduced some
-backwards-incompatible changes in 2015, so many of the packages which
-depend on ggplot2 had to be updated in response. What if the
-developers of these other packages can not update them immediately?
-Then their packages are removed from CRAN.
-
-It also makes it [[http://sugiyama-www.cs.titech.ac.jp/~toby/org/HOCKING-reproducible-research-with-R.html][difficult to perform reproducible research using R]].
-For example, I used R to write my PhD in 2012, and now in 2015 most of
-the versions of the R packages that I used have changed.  If I
-download my PhD thesis code and try to re-run the code to re-make the
-results figures, I will almost certainly get errors unless I install
-the specific R package versions that I used in 2012 (which I saved
-along with my thesis, just in case). But the standard practice for
-documenting package dependencies in R scripts is simply writing
-=library(pkg)=, which does not document what version of =pkg= was
-used. So for most research it is effectively impossible to have truly
-reproducible computations.
-
-I proposed the [[https://github.com/tdhock/requireGitHub][requireGitHub]] package to avoid this problem (and that
-page also discussions some alternative solutions proposed by
-others). Since =devtools::install_github= can install any version 
-(not just the most recent version), it is possible to write 
-future-proof, reproducible scripts by simply writing the 
-R package version in the R script.
-
-*** Problem: distributing packages with compiled code
+*** distribute binaries (compiled C/C++/FORTRAN code)
 
 One drawback to using GitHub to distribute a package with compiled
 code is that devtools::install_github will only work on a system that
@@ -166,22 +136,59 @@ contrast CRAN compiles Windows and Mac binaries on their servers, and
 install.packages(type="binary") will download and install those
 binaries.
 
-*** Who decides how to test your code?
+** Things you can do on GitHub but not on CRAN
 
-In [[https://stat.ethz.ch/pipermail/r-announce/2000/000127.html][the R-1.0.0 announcement]] ([[file:R-1.html][my copy]]), Peter Dalgaard wrote that "the
-base language and the API for extension writers will remain stable for
-the foreseeable future." However CRAN does make [[https://github.com/eddelbuettel/crp/commits/master/texi][changes]] to its
-[[https://cran.r-project.org/web/packages/policies.html][policies]], which are currently enforced by running =R CMD check
---as-cran= on [[https://cran.r-project.org/web/checks/check_results_directlabels.html][several different operating systems that R supports]].
+*** install old versions of your package
 
-[[https://travis-ci.org/][Travis-CI]] is a continuous integration service which gives 50 minutes
-of free computation time to free/open-source software projects hosted
-on GitHub. For R packages that you would like to eventually submit to
-CRAN, you should use the [[https://docs.travis-ci.com/user/languages/r][instructions for the R language]] to run =R CMD
-check= on Travis after every push to your GitHub repos.
+=install.packages("pkg")= means "install the most recent version of
+=pkg= from a CRAN-like repository."
 
-If you don't want to run all of the =R CMD check= tests, you can write
-your own testing script using [[https://github.com/craigcitro/r-travis/wiki][craigcitro's travis-tool.sh]] ([[https://github.com/tdhock/animint/blob/master/.travis.yml][example]]).
+In practice this causes problems when a package developer wants to
+change his package, and there are other CRAN packages which depend on
+it. For example, the ggplot2 package introduced some
+backwards-incompatible changes in 2015, so many of the packages which
+depend on ggplot2 had to be updated in response. What if the
+developers of these other packages can not update them immediately?
+Then their packages are removed from CRAN.
+
+=devtools::install_github= can install any commit in your git repos
+(not just the most recent version). To write future-proof,
+reproducible R scripts, I write the version of each package that I use
+in a [[https://github.com/tdhock/dotfiles/blob/master/.Rprofile][works_with_R]] declaration.
+
+*** test your code after every change
+
+When you submit a package to CRAN, a human CRAN maintainer runs =R CMD
+check --as-cran= on [[https://cran.r-project.org/web/checks/check_results_directlabels.html][several different operating systems that R
+supports]]. It is also useful to see check results for the minor changes
+that you make between CRAN submissions. Of course you can do that
+whenever you like on your own computer. Even better, for packages
+hosted on GitHub, you can run whatever tests you want in the "cloud."
+[[https://travis-ci.org/][Travis-CI]] and [[http://wercker.com/][wercker]] are continuous integration services which give
+free computation time for testing your free/open-source software
+projects hosted on GitHub ([[http://www.appveyor.com/][AppVeyor]] and [[https://circleci.com/][CircleCI]] are other services
+that I have not yet tried). There are several differences between
+these two services:
+
+| service   | speed | builds per commit | timeout    | time limit     | R?  |
+|-----------+-------+-------------------+------------+----------------+-----|
+| Travis-CI | slow  | several           | [[https://docs.travis-ci.com/user/customizing-the-build/#Build-Timeouts][10 minutes]] | [[https://docs.travis-ci.com/user/customizing-the-build/#Build-Timeouts][50 min / build]] | yes |
+| wercker   | fast  | 1                 | [[http://devcenter.wercker.com/docs/faq/how-to-bypass-timeouts.html][5 minutes]]  | [[http://devcenter.wercker.com/docs/faq/how-to-bypass-timeouts.html][60 min / step]]  | no  |   
+
+For R packages that you would like to eventually submit to CRAN, it is
+easiest to use Travis since it has [[https://docs.travis-ci.com/user/languages/r][native support for the R language]]
+which runs =R CMD check= after every push to your GitHub repos. If you
+don't want to run all of the =R CMD check= tests, you can write your
+own Travis testing script using [[https://github.com/craigcitro/r-travis/wiki][craigcitro's travis-tool.sh]] ([[https://github.com/tdhock/animint/blob/master/.travis.yml][example]]),
+or use wercker with the [[https://hub.docker.com/r/rocker/hadleyverse/][rocker/hadleyverse box]] which has R
+pre-installed ([[https://github.com/tdhock/animint/blob/master/wercker.yml][example]]).
+
+This is most useful for collaborations.
+- You can write some tests that make sure your code works.
+- Your collaborator can propose some changes via a Pull Request.
+- Your tests are run using the changed code, and if it passes the
+  tests you see a green check mark and you know it is OK to merge
+  ([[https://github.com/tdhock/PeakSegJoint/pull/6][example]]).
 
 *** Code coverage
 
@@ -202,24 +209,25 @@ Code coverage can be useful for
 
 Code coverage is not computed on CRAN/R-Forge/BioConductor.
 
-*** How to depend on other packages?
+*** depend on other GitHub packages
 
-List them in the DESCRIPTION file ([[https://github.com/tdhock/animint/blob/master/DESCRIPTION][example]]). [[https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Package-Dependencies][Full documentation in
-"Package dependencies" section of Writing R extensions]].
+The *Remotes* section of DESCRIPTION is defined by devtools (not CRAN,
+[[https://github.com/tdhock/animint/blob/master/DESCRIPTION][example]]). If it is present, it is used by devtools::install_github to
+get packages from GitHub (instead of installing them from
+CRAN). [[https://cran.r-project.org/web/packages/devtools/vignettes/dependencies.html][Details in vignette("dependencies", package="devtools")]].
 
-You can use Depends or Imports for the packages that your package
-will definitely need. *Depends* packages will be attached prior to your
-package (as if the library function was used). *Imports* packages will
-not be attached (so the user will not have access to functions in that
-other package). 
+Use Remotes + one of the following:
+- *Depends* packages will be attached prior to your package (as if the
+  library function was used).
+- *Imports* packages will not be attached
+  (so the user will not have access to functions in that other
+  package). 
+- *Suggests* is for packages that you use in examples or tests (but
+  are not necessary for running your functions).
 
-Use *Suggests* for packages that you use in examples or tests (but are
-not necessary for running your functions).
-
-The *Remotes* argument is defined by devtools (not CRAN). If it is
-present, it is used by devtools::install_github to get packages from
-GitHub (instead of installing them from CRAN). [[https://cran.r-project.org/web/packages/devtools/vignettes/dependencies.html][Details in
-vignette("dependencies", package="devtools")]].
+[[https://cran.r-project.org/doc/manuals/r-release/R-exts.html#Package-Dependencies][Full
+documentation in "Package dependencies" section of Writing R
+extensions]].
 
 ** Exercise: create a simple package
 
@@ -233,6 +241,9 @@ https://github.com/r-hub/proposal
 ** Historical references
 
 R history [[https://homepage.boku.ac.at/leisch/papers/Hornik%2BLeisch-2002.pdf][from an Austrian perspective]].
+
+[[http://dx.doi.org/10.1007/s00180-010-0205-5][Prospects and Challenges in R Package Development]] by Theussl, Ligges,
+and Hornik.
 
 From [[https://en.wikipedia.org/w/index.php?title%3DR_%2528programming_language%2529&oldid%3D689167000][Wikipedia:R_(programming_language)]]: Release 0.49 on 23 Apr 1997
 "is the oldest available source release, and compiles on a limited
